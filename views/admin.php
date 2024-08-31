@@ -44,7 +44,7 @@
                             <td>
                                 <?php if ($client['address_count'] > 1): ?>
                                     <button class="btn btn-sm view-addresses-btn" data-id="<?php echo $client['IdClient']; ?>">
-                                        <i class="fas fa-plus"></i> Endereços
+                                    <i class="fa-solid fa-list"></i>
                                     </button>
                                 <?php else: ?>
                                     <?php echo htmlspecialchars($client['Street']); ?>
@@ -123,22 +123,22 @@
                             <div class="address-form">
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
-                                        <input type="text" class="form-control" name="addresses[Street]" placeholder="Rua">
+                                        <input type="text" class="form-control" name="addresses[0][Street]" placeholder="Rua">
                                     </div>
                                     <div class="form-group col-md-6">
-                                        <input type="text" class="form-control" name="addresses[Number]" placeholder="Número">
+                                        <input type="text" class="form-control" name="addresses[0][Number]" placeholder="Número">
                                     </div>
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
-                                        <input type="text" class="form-control" name="addresses[City]" placeholder="Cidade">
+                                        <input type="text" class="form-control" name="addresses[0][City]" placeholder="Cidade">
                                     </div>
                                     <div class="form-group col-md-6">
-                                        <input type="text" class="form-control" name="addresses[State]" placeholder="Estado">
+                                        <input type="text" class="form-control" name="addresses[0][State]" placeholder="Estado">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <input type="text" id="addClientCEP" class="form-control" name="addresses[CEP]" placeholder="CEP">
+                                    <input type="text" class="form-control" name="addresses[0][CEP]" placeholder="CEP">
                                 </div>
                                 <button type="button" class="btn btn-danger remove-address-btn">Remover</button>
                             </div>
@@ -228,38 +228,137 @@
         </div>
     </div>
 
+    <!-- Toasts -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="successToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+        <div class="toast-body">
+            Operação realizada com sucesso!
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+    <div id="errorToast" class="toast align-items-center text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+        <div class="toast-body">
+            Ocorreu um erro. Por favor, tente novamente.
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+    </div>
+
     <script>
         $(document).ready(function() {
 
+            let addressIndex = 1; // Índice para novos endereços
+
+            // Adicionar novo endereço no modal de adicionar cliente
+            $('#addAddressBtn').click(function() {
+                const addressHtml = `
+                    <div class="address-form">
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <input type="text" class="form-control" name="addresses[${addressIndex}][Street]" placeholder="Rua">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <input type="text" class="form-control" name="addresses[${addressIndex}][Number]" placeholder="Número">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <input type="text" class="form-control" name="addresses[${addressIndex}][City]" placeholder="Cidade">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <input type="text" class="form-control" name="addresses[${addressIndex}][State]" placeholder="Estado">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="addresses[${addressIndex}][CEP]" placeholder="CEP">
+                        </div>
+                        <button type="button" class="btn btn-danger remove-address-btn">Remover</button>
+                    </div>
+                `;
+                $('#addresses-container').append(addressHtml);
+                addressIndex++;
+            });
+
+            // Remover endereço
+            $(document).on('click', '.remove-address-btn', function() {
+                $(this).closest('.address-form').remove();
+            });
+
+            // Limpar o modal ao fechar
+            $('#addClientModal').on('hidden.bs.modal', function() {
+                $('#addClientForm')[0].reset();
+                $('#addresses-container').html(`
+                    <h5>Endereços</h5>
+                    <div class="address-form">
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <input type="text" class="form-control" name="addresses[0][Street]" placeholder="Rua">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <input type="text" class="form-control" name="addresses[0][Number]" placeholder="Número">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <input type="text" class="form-control" name="addresses[0][City]" placeholder="Cidade">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <input type="text" class="form-control" name="addresses[0][State]" placeholder="Estado">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="addresses[0][CEP]" placeholder="CEP">
+                        </div>
+                        <button type="button" class="btn btn-danger remove-address-btn">Remover</button>
+                    </div>
+                `);
+                addressIndex = 1; // Resetar índice
+            });
+
             function filters(searchQuery = '') {
                 $.ajax({
-                    url: 'http://localhost/KaBuM/admin/filters',
+                    url: '<?php echo BASE_URL; ?>admin/filters',
                     method: 'GET',
                     data: { search: searchQuery },
                     dataType: 'json',
                     success: function(data) {
                         let clients = data.clients;
                         let clientsTable = '';
-                        $.each(clients, function(index, client) {
-                            clientsTable += `<tr>
-                                <td>${client.Name}</td>
-                                <td>${client.CPF}</td>
-                                <td>${client.Date_Birth}</td>
-                                <td>
-                                    ${client.address_count > 1 ? `<button class="btn btn-sm view-addresses-btn" data-id="${client.IdClient}">
-                                        <i class="fas fa-plus"></i> Endereços
-                                    </button>` : client.Street}
-                                </td>
-                                <td>
-                                    <button class="btn btn-sm edit-btn" data-id="${client.IdClient}">
-                                        <i class="fa-regular fa-pen-to-square"></i>
-                                    </button>
-                                    <button class="btn btn-sm delete-btn" data-id="${client.IdClient}">
-                                        <i class="fa-regular fa-trash-can"></i>
-                                    </button>                                
-                                </td>
+                        if (clients.length > 0) {
+                            $.each(clients, function(index, client) {
+                                clientsTable += `<tr>
+                                    <td>${client.Name}</td>
+                                    <td>${client.CPF}</td>
+                                    <td>${client.Date_Birth}</td>
+                                    <td>
+                                        ${client.address_count > 1 ? `<button class="btn btn-sm view-addresses-btn" data-id="${client.IdClient}">
+                                            <i class="fa-solid fa-list"></i>
+                                        </button>` : client.Street}
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-sm edit-btn" data-id="${client.IdClient}">
+                                            <i class="fa-regular fa-pen-to-square"></i>
+                                        </button>
+                                        <button class="btn btn-sm delete-btn" data-id="${client.IdClient}">
+                                            <i class="fa-regular fa-trash-can"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="addresses-row" id="addresses-${client.IdClient}" style="display: none;">
+                                    <td colspan="5">
+                                        <div id="addresses-list-${client.IdClient}"></div>
+                                    </td>
+                                </tr>`;
+                            });
+                        } else {
+                            clientsTable = `<tr>
+                                <td colspan="5">Nenhum cliente encontrado.</td>
                             </tr>`;
-                        });
+                        }
                         $('#clientsTableBody').html(clientsTable);
                     },
                     error: function(xhr, status, error) {
@@ -313,8 +412,27 @@
                     method: 'POST',
                     data: clientData,
                     success: function(response) {
+                        if (response.success) {
+
+                            $('#successToast').toast('show');
+                            setTimeout(() => {
+                                $('#successToast').toast('hide');
+                            }, 5000);
+
+                            filters(); // Atualizar lista de clientes
+                        } else {
+                            $('#errorToast').toast('show');
+                            setTimeout(() => {
+                                $('#errorToast').toast('hide');
+                            }, 5000);
+                        }
                         $('#addClientModal').modal('hide');
-                        filters();
+                    },
+                    error: function() {
+                        $('#errorToast').toast('show');
+                        setTimeout(() => {
+                            $('#errorToast').toast('hide');
+                        }, 5000);
                     }
                 });
             });
@@ -327,40 +445,41 @@
                     method: 'GET',
                     data: { id: clientId },
                     dataType: 'json',
-                    success: function(client) {
-                        let item = client.client[0];
-                        $('#editClientId').val(item.IdClient);
-                        $('#editClientName').val(item.Name);
-                        $('#editClientDateOfBirth').val(item.Date_Birth);
-                        $('#editClientCPF').val(item.CPF);
-                        $('#editClientRG').val(item.RG);
-                        $('#editClientPhone').val(item.Telephone);
-                        $('#editClientModal').modal('show');
+                    success: function(response) {
+                        let client = response.client[0];
+                        $('#editClientId').val(client.IdClient);
+                        $('#editClientName').val(client.Name);
+                        $('#editClientDateOfBirth').val(client.Date_Birth);
+                        $('#editClientCPF').val(client.CPF);
+                        $('#editClientRG').val(client.RG);
+                        $('#editClientPhone').val(client.Telephone);
 
                         let addressesHtml = '';
-                        client.addresses.forEach(function(address) {
+                        response.addresses.forEach(function(address, index) {
                             addressesHtml += `
-                                <div class="address-form">
+                                <div class="address-form" data-index="${index}">
                                     <div class="form-row">
                                         <div class="form-group col-md-6">
-                                            <input type="text" class="form-control" name="addresses[Street]" value="${address.Street}" placeholder="Rua">
+                                            <input type="text" class="form-control" name="addresses[${index}][Street]" value="${address.Street}" placeholder="Rua">
                                         </div>
                                         <div class="form-group col-md-6">
-                                            <input type="text" class="form-control" name="addresses[Number]" value="${address.Number}" placeholder="Número">
+                                            <input type="text" class="form-control" name="addresses[${index}][Number]" value="${address.Number}" placeholder="Número">
                                         </div>
                                     </div>
                                     <div class="form-row">
                                         <div class="form-group col-md-6">
-                                            <input type="text" class="form-control" name="addresses[City]" value="${address.City}" placeholder="Cidade">
+                                            <input type="text" class="form-control" name="addresses[${index}][City]" value="${address.City}" placeholder="Cidade">
                                         </div>
                                         <div class="form-group col-md-6">
-                                            <input type="text" class="form-control" name="addresses[State]" value="${address.State}" placeholder="Estado">
+                                            <input type="text" class="form-control" name="addresses[${index}][State]" value="${address.State}" placeholder="Estado">
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <input type="text" class="form-control" id="editClientCEP" name="addresses[CEP]" value="${address.CEP}" placeholder="CEP">
+                                        <input type="text" class="form-control" name="addresses[${index}][CEP]" value="${address.CEP}" placeholder="CEP">
                                     </div>
-                                    <button type="button" class="btn btn-danger remove-address-btn">Remover</button>
+                                    <button type="button" class="btn btn-danger remove-address-btn" data-id="${address.IdAddress}">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
                                 </div>
                             `;
                         });
@@ -372,18 +491,41 @@
 
             // Atualizar cliente
             $('#updateClientBtn').click(function() {
-                const clientData = $('#editClientForm').serialize();
+                const formData = $('#editClientForm').serializeArray();
+                const clientData = formData.filter(field => field.name.startsWith('client')).reduce((obj, field) => {
+                    obj[field.name.replace('client[', '').replace(']', '')] = field.value;
+                    return obj;
+                }, {});
+
+                const addressesData = formData.filter(field => field.name.startsWith('addresses')).reduce((acc, field) => {
+                    const index = field.name.match(/\[(\d+)\]/)[1];
+                    if (!acc[index]) acc[index] = {};
+                    acc[index][field.name.replace(`addresses[${index}][`, '').replace(']', '')] = field.value;
+                    return acc;
+                }, []);
+
                 $.ajax({
                     url: '<?php echo BASE_URL; ?>admin/updateClient',
                     method: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify({
-                        client: $('#editClientForm').serializeArray().filter(field => field.name.startsWith('client')),
-                        addresses: $('#editClientForm').serializeArray().filter(field => field.name.startsWith('addresses'))
+                        client: clientData,
+                        addresses: addressesData
                     }),
                     success: function(response) {
+                        $('#successToast').toast('show');
+                        setTimeout(() => {
+                            $('#successToast').toast('hide');
+                        }, 5000);
+
                         $('#editClientModal').modal('hide');
                         filters();
+                    },
+                    error: function(){
+                        $('#errorToast').toast('show');
+                        setTimeout(() => {
+                            $('#errorToast').toast('hide');
+                        }, 5000);
                     }
                 });
             });
@@ -402,35 +544,46 @@
                         method: 'POST',
                         data: { id: clientIdToDelete },
                         success: function(response) {
+                            $('#successToast').toast('show');
+                            setTimeout(() => {
+                                $('#successToast').toast('hide');
+                            }, 5000);
                             $('#confirmDeleteModal').modal('hide');
                             filters();
+                        },
+                        error: function(){
+                            $('#errorToast').toast('show');
+                            setTimeout(() => {
+                                $('#errorToast').toast('hide');
+                            }, 5000);
                         }
                     });
                 }
             });
 
             // Adicionar novo endereço
-            $('#addEditAddressBtn').click(function() {
-                const addressHtml = `
-                    <div class="address-form">
+            $(document).on('click', '#addEditAddressBtn', function() {
+                let index = $('#edit-addresses-container .address-form').length;
+                let addressHtml = `
+                    <div class="address-form" data-index="${index}">
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <input type="text" class="form-control" name="addresses[Street]" placeholder="Rua">
+                                <input type="text" class="form-control" name="addresses[${index}][Street]" placeholder="Rua">
                             </div>
                             <div class="form-group col-md-6">
-                                <input type="text" class="form-control" name="addresses[Number]" placeholder="Número">
+                                <input type="text" class="form-control" name="addresses[${index}][Number]" placeholder="Número">
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <input type="text" class="form-control" name="addresses[City]" placeholder="Cidade">
+                                <input type="text" class="form-control" name="addresses[${index}][City]" placeholder="Cidade">
                             </div>
                             <div class="form-group col-md-6">
-                                <input type="text" class="form-control" name="addresses[State]" placeholder="Estado">
+                                <input type="text" class="form-control" name="addresses[${index}][State]" placeholder="Estado">
                             </div>
                         </div>
                         <div class="form-group">
-                            <input type="text" class="form-control" id="addClientCEP" name="addresses[CEP]" placeholder="CEP">
+                            <input type="text" class="form-control" name="addresses[${index}][CEP]" placeholder="CEP">
                         </div>
                         <button type="button" class="btn btn-danger remove-address-btn">Remover</button>
                     </div>
@@ -440,7 +593,33 @@
 
             // Remover endereço
             $(document).on('click', '.remove-address-btn', function() {
-                $(this).closest('.address-form').remove();
+                const addressId = $(this).data('id');
+                if (addressId) {
+                    $.ajax({
+                        url: '<?php echo BASE_URL; ?>admin/deleteAddress',
+                        method: 'POST',
+                        data: { id: addressId },
+                        success: function(response) {
+                            const data = JSON.parse(response);
+                            if (data.success) {
+                                $('#successToast').toast('show');
+                                setTimeout(() => {
+                                    $('#successToast').toast('hide');
+                                }, 5000);
+                                $(this).closest('.address-form').remove();
+                                filters();
+                            } else {
+                                $('#errorToast').toast('show');
+                                setTimeout(() => {
+                                    $('#errorToast').toast('hide');
+                                }, 5000);
+                                filters();
+                            }
+                        }.bind(this)
+                    });
+                } else {
+                    $(this).closest('.address-form').remove();
+                }
             });
         });
     </script>

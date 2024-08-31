@@ -1,6 +1,9 @@
 <?php
 session_start();
 require 'config.php';
+require 'core/Core.php';
+require 'core/controller.php';
+require 'core/Model.php';
 
 spl_autoload_register(function($class){
 

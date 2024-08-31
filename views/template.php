@@ -12,27 +12,41 @@
 </head>
 <body>
     <div class="wrapper">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-            <a class="navbar-brand" href="<?php echo BASE_URL; ?>">Minha Empresa</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="<?php echo BASE_URL; ?>">Home <span class="sr-only">(current)</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?php echo BASE_URL; ?>admin">Administração</a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
+        <?php if ($viewName !== 'login' && $viewName !== 'register'): ?>
+            <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+                <a class="navbar-brand" href="<?php echo BASE_URL; ?>">Minha Empresa</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="<?php echo BASE_URL; ?>">Home <span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?php echo BASE_URL; ?>admin">Administração</a>
+                        </li>
+                    </ul>
+                    <?php if (isset($_SESSION['user_id'])): ?>
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?php echo BASE_URL; ?>logout">
+                                    <i class="fa-solid fa-right-from-bracket"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    <?php endif; ?>
+                </div>
+            </nav>
+        <?php endif; ?>
 
         <main>
             <?php $this->loadViewInTemplate($viewName, $viewData); ?>
         </main>
-        <?php require_once 'footer.php'; ?>
+
+        <?php if ($viewName !== 'login' && $viewName !== 'register'): ?>
+            <?php require_once 'footer.php'; ?>
+        <?php endif; ?>
     </div>
 
     <link rel="stylesheet" type="text/css" href="<?php echo BASE_URL; ?>assets/css/style.css">
