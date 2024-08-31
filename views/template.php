@@ -11,27 +11,29 @@
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-        <a class="navbar-brand" href="<?php echo BASE_URL; ?>">Minha Empresa</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-                <li class="nav-item active">
-                    <a class="nav-link" href="<?php echo BASE_URL; ?>">Home <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="<?php echo BASE_URL; ?>admin">Administração</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
+    <div class="wrapper">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+            <a class="navbar-brand" href="<?php echo BASE_URL; ?>">Minha Empresa</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="<?php echo BASE_URL; ?>">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?php echo BASE_URL; ?>admin">Administração</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
 
-    <main>
-        <?php $this->loadViewInTemplate($viewName, $viewData); ?>
-    </main>
-    <?php require_once 'footer.php'; ?>
+        <main>
+            <?php $this->loadViewInTemplate($viewName, $viewData); ?>
+        </main>
+        <?php require_once 'footer.php'; ?>
+    </div>
 
     <link rel="stylesheet" type="text/css" href="<?php echo BASE_URL; ?>assets/css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>

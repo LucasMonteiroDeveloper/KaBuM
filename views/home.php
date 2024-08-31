@@ -8,7 +8,7 @@
 </head>
 <body>
 
-    <div class="container mt-5">
+    <div class="container mt-5" style="margin-top: 10%;">
         <h1>Bem-vindo à nossa página inicial!</h1>
         <p>Conteúdo da página inicial.</p>
     </div>

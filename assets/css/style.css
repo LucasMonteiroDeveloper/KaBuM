@@ -7,9 +7,30 @@ body, html {
     flex-direction: column;
 }
 
+.search-group {
+    text-align: right;
+}
+
+.search-group label {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.search-group input {
+    display: inline-block;
+    max-width: 300px;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
 main {
     flex: 1;
 }
+
 /* Footer  */
 .containerFooter {
 	display:flex;
