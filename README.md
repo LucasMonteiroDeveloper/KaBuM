@@ -23,7 +23,7 @@ Exemplo de configuração presente nesse banco
 ```
 
 ## Login
-Se você executou o script de inserção, haverá dois logins ativos para sua sessão, que são:
+Se você executou o script de inserção, haverá dois logins ativos para sua sessão, sendo um deles:
 ```ruby
     Login: fulano@gmail.com
     Senha: teste
@@ -40,17 +40,17 @@ http://localhost/KaBuM/
 ## Executando Testes
 Optei por não utilizar um framework para manter o processo mais manual. Embora o PHPUnit pudesse facilitar a manipulação e automação dos testes, optei por utilizar asserções simples em scripts PHP nativos. Essa abordagem é mais manual, mas continua sendo eficaz para pequenos projetos.
 
-#### Comanda de Execução
+#### Comando de Execução
  Abra o terminal, navegue até o diretório do projeto e execute o seguinte comando para rodar todos os testes:
 ```
 php test-runner.php
 ```
 #### Saída
-  Se todos os testes passarem, não haverá saída adicional, exceto as mensagens que você definiu no script. Caso algum teste falhe, o assert() irá interromper o script e exibir uma mensagem de erro.
+  Se todos os testes passarem, não haverá saída adicional, exceto as mensagens que foram definidas no script. Caso algum teste falhe, o assert() irá interromper o script e exibir uma mensagem de erro.
 
 #### Como Funciona
 Os arquivos de teste estão dentro da pasta 'tests/'.
 
 Test Runner: O test-runner.php é responsável por carregar todos os arquivos de teste e executar as funções que começam com test.
 
-Execução: Cada função de teste verifica um aspecto específico do seu código, utilizando assert() para validar os resultados esperados.
+Execução: Cada função de teste verifica um aspecto específico do código, utilizando assert() para validar os resultados esperados.
