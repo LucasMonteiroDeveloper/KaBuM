@@ -1,0 +1,70 @@
+-- Criação do banco de dados
+CREATE DATABASE IF NOT EXISTS kabum;
+USE kabum;
+
+-- Criação da tabela `address`
+CREATE TABLE address (
+  IdAddress INT(11) NOT NULL AUTO_INCREMENT,
+  IdClient INT(11) NOT NULL,
+  Street VARCHAR(150) NOT NULL,
+  Number VARCHAR(10) NOT NULL,
+  City VARCHAR(100) NOT NULL,
+  State VARCHAR(2) NOT NULL,
+  CEP VARCHAR(10) NOT NULL,
+  Complement VARCHAR(100) DEFAULT NULL,
+  PRIMARY KEY (IdAddress),
+  KEY idx_cliente_id (IdClient)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+
+-- Criação da tabela `clients`
+CREATE TABLE clients (
+  IdClient INT(11) NOT NULL AUTO_INCREMENT,
+  Name VARCHAR(100) NOT NULL,
+  Date_Birth DATE DEFAULT NULL,
+  CPF VARCHAR(14) NOT NULL,
+  RG VARCHAR(12) DEFAULT NULL,
+  Telephone VARCHAR(15) DEFAULT NULL,
+  PRIMARY KEY (IdClient),
+  UNIQUE KEY CPG (CPF)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+
+-- Criação da tabela `users`
+CREATE TABLE users (
+  IdUser INT(11) NOT NULL AUTO_INCREMENT,
+  Username VARCHAR(50) NOT NULL,
+  Password VARCHAR(255) NOT NULL,
+  Email VARCHAR(100) NOT NULL,
+  PRIMARY KEY (IdUser),
+  UNIQUE KEY Username (Username),
+  UNIQUE KEY Email (Email),
+  KEY idx_username (Username)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+-- Adicionando restrições de chaves estrangeiras
+ALTER TABLE address
+  ADD CONSTRAINT address_ibfk_1
+  FOREIGN KEY (IdClient) REFERENCES clients (IdClient) ON DELETE CASCADE;
+
+
+-- Inserção de dados na tabela `address`
+INSERT INTO address (IdAddress, IdClient, Street, Number, City, State, CEP, Complement) VALUES
+(1, 1, 'Rua Santa Maria', '843', 'Ananindeua', 'PA', '67125-165', NULL),
+(30, 8, 'Rua Manoel Coelho', '738', 'São Caetano do Sul', 'SP', '09510-110', NULL),
+(50, 2, 'Avenida Cacau', '291', 'Imperatriz', 'MA', '65227-963', NULL),
+(51, 2, 'Avenida José Pereira de Andrade', '1517', 'Jacareí', 'SP', '12328-290', NULL),
+(73, 9, 'Rua Sete de Setembro', '660', 'Aracaju', 'SE', '49067-036', NULL);
+
+
+-- Inserção de dados na tabela `clients`
+INSERT INTO clients (IdClient, Name, Date_Birth, CPF, RG, Telephone) VALUES
+(1, 'Lucas Monteiro', '1999-04-29', '525.119.710-11', '38.401.787-3', '3581-2632'),
+(2, 'Isabele Caroline', '2002-05-09', '123.456.789-99', '15.935.722-2', '1111-2222'),
+(8, 'Pedro Juan Gomes', '2005-07-23', '735.336.449-10', '23.431.538-6', '(11) 99143-1576'),
+(9, 'Camila Elza Duart', '1999-03-08', '434.852.097-67', '41.401.114-4', '(95) 99394-7021');
+
+-- Inserção de dados na tabela `users`
+INSERT INTO users (IdUser, Username, Password, Email) VALUES
+(1, 'Lucas Monteiro', '$2y$10$DRO9IU0nxdb4n4sg8FykJuKSsiftvJ.IYknOc/wvV8.xC8x1PXcnq', 'teste@testador.com'),
+(2, 'fulano teste', '$2y$10$c54guO8X8sDlk9W0yulkJOLMnv3b.u2EXa5e2qFCcGHlLPjYIwy1K', 'fulano@gmail.com');
