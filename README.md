@@ -1,4 +1,5 @@
-Visão Geral
+### Visão Geral
+
 Este README fornece instruções detalhadas sobre como iniciar, executar e testar o projeto. Este projeto é um sistema em PHP puro em MVC com MySQL como banco de dados.
 
 ## Inicialização do Projeto
@@ -11,7 +12,7 @@ gh repo clone LucasMonteiroDeveloper/TechnicalChallenge-Kabum
 ```
 
 ## Configurar o Banco de Dados
-Crie um banco de dados MySQL para o projeto e rode os scripts para a criação e inserção do banco de dados no arquivo database-kabum.txt.
+Criei um banco de dados MySQL para o projeto. Rode os scripts para a criação e inserção do banco de dados no arquivo database-kabum.txt.
 
 Exemplo de configuração presente nesse banco
 ```ruby
